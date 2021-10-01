@@ -13,10 +13,12 @@ import { Post } from './components/views/Post/Post';
 import { PostEdit } from './components/views/PostEdit/PostEdit';
 import { PostAdd } from './components/views/PostAdd/PostAdd';
 import { NotFound } from './components/views/NotFound/NotFound';
+import { UserPosts } from './components/views/UserPosts/UserPosts';
 
 const theme = createMuiTheme({
   palette: {
-    primary: { main: '#2B4C6F' },
+    primary: { main: '#140f4d' },
+    secondary: { main: '#e2e61e' },
   },
 });
 
@@ -32,6 +34,7 @@ const App = () => (
               <Route exact path='/post/add' component={PostAdd} />
               <Route exact path='/post/:id' component={Post} />
               <Route exact path='/post/:id/edit' component={PostEdit} />
+              <Route exact path='/user-posts' component={UserPosts} />
               <Route path='*' component={NotFound} />
             </Switch>
           </MainLayout>
