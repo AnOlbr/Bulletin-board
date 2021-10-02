@@ -1,23 +1,30 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom'
 
 import clsx from 'clsx';
-
-import Button from '@material-ui/core/Button';
 
 // import { connect } from 'react-redux';
 // import { reduxSelector, reduxActionCreator } from '../../../redux/exampleRedux.js';
 
 import styles from './NotFound.module.scss';
-import { settings } from '../../../settings';
+import Fab from '@material-ui/core/Fab';
 
-const Component = ({ className }) => (
+const Component = ({className}) => (
   <div className={clsx(className, styles.root)}>
-    <img src={settings.notFound} alt="404 error" className={styles.image} />
-    <div className={styles.content}>
-      <h3>Page not found</h3>
-      <Button size="large" href='/' variant="contained">Go to main page</Button>
-    </div>
+    <h2 className={styles.title}>Page not found</h2>
+
+    <Link className={styles.button} to={'/'}>
+      <Fab
+        size='small'
+        color='secondary'
+        aria-label='add'
+        variant='extended'
+      >
+        Back to Homepage
+      </Fab>
+    </Link>
+    
   </div>
 );
 
@@ -28,12 +35,15 @@ Component.propTypes = {
 // const mapStateToProps = state => ({
 //   someProp: reduxSelector(state),
 // });
+
 // const mapDispatchToProps = dispatch => ({
 //   someAction: arg => dispatch(reduxActionCreator(arg)),
 // });
+
 // const Container = connect(mapStateToProps, mapDispatchToProps)(Component);
+
 export {
   Component as NotFound,
   // Container as NotFound,
   Component as NotFoundComponent,
-};
+};;

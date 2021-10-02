@@ -6,31 +6,31 @@ import { Header } from '../Header/Header';
 import clsx from 'clsx';
 
 // import { connect } from 'react-redux';
-// import { getUser } from '../../../redux/userRedux.js';
+// import { reduxSelector, reduxActionCreator } from '../../../redux/exampleRedux.js';
 
 import styles from './MainLayout.module.scss';
 
-const Component = ({ className, children }) => (
+const Component = ({className, children}) => (
   <div className={clsx(className, styles.root)}>
-    <Header />
+    <Header/>
     {children}
   </div>
 );
+
 Component.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
-  user: PropTypes.object,
 };
 
 // const mapStateToProps = state => ({
-//   user: getUser(state),
+//   someProp: reduxSelector(state),
 // });
 
 // const mapDispatchToProps = dispatch => ({
 //   someAction: arg => dispatch(reduxActionCreator(arg)),
 // });
 
-// const Container = connect(mapStateToProps)(Component);
+// const Container = connect(mapStateToProps, mapDispatchToProps)(Component);
 
 export {
   Component as MainLayout,

@@ -1,127 +1,98 @@
-import React from 'react';
+import React,  { useState } from 'react';
 import PropTypes from 'prop-types';
-import Container from '@material-ui/core/Container';
-import Card from '@material-ui/core/Card';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import CardHeader from '@material-ui/core/CardHeader';
+import {Link} from 'react-router-dom';
+import { NotFound } from '../NotFound/NotFound';
+
 import clsx from 'clsx';
-import shortid from 'shortid';
+
 import { connect } from 'react-redux';
-import { getAll, addPost } from '../../../redux/postsRedux.js';
+import { getAll, addPost } from '../../../redux/postsRedux';
+
 import styles from './PostAdd.module.scss';
 
-const Component = ({ className, addPost }) => {
-  const today = new Date();
-  const day = today.getDate();
-  const month = today.getMonth();
-  const year = today.getFullYear();
-  const date = day + '/' + month + '/' + year;
-  const titleProps = {
-    minLength: 10,
-  };
-  const contentProps = {
-    minLength: 20,
-  };
-  const [post, setPost] = React.useState({
-    id: shortid.generate(),
-    date: date,
-  });
+const Component = ({className, addPost}) => {
+  const [login, setLogin] = useState(false);
+  const [post, setPost] = useState('');
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    await addPost(post);
-  };
+  const handleChange = (event) => {
+    setPost({ ...post, [event.target.name]: event.target.value });
+  }
 
-  const handleChange = async (event, name) => {
-    await setPost({
-      ...post,
-      [name]: event.target.value,
-    });
-  };
+  const handleChange2 = (event) => {
+    setLogin(!login)
+  }
+
+  const submitForm = (event) => {
+    event.preventDefault();
+    if(post.title.length > 1 && post.content.length > 1 && post.email){
+      post.updateDate = new Date().toISOString();
+      addPost(post);
+
+      setPost({
+        id: '',
+        title: '',
+        date: '',
+        content: '',
+        email: '',
+        image: '',
+        updateDate: '',
+        status: ''
+      });
+    } else {
+      alert('Please complete all fields');
+    }
+  }
 
   return (
     <div className={clsx(className, styles.root)}>
-      <Container maxWidth="lg">
-        <Card className={styles.card}>
-          <CardHeader title="Add new post" />
-          <form className={styles.form} autoComplete="off" onSubmit={e => handleSubmit(e)}>
-            <TextField
-              id="title"
-              label="Title"
-              overflow="auto"
-              required
-              inputProps={titleProps}
-              value={post.title}
-              onChange={e => handleChange(e, 'title')}
-            />
-            <TextField
-              id="price"
-              label="Price"
-              type="number"
-              overflow="auto"
-              value={post.price}
-              onChange={e => handleChange(e, 'price')}
-            />
-            <input
-              accept="image/*"
-              className={styles.input}
-              id="upload-photo"
-              multiple
-              type="file"
-              onChange={e => handleChange(e, 'image')}
-            />
-            <TextField
-              variant="outlined"
-              multiline
-              id="content"
-              overflow="auto"
-              inputProps={contentProps}
-              label="Content"
-              placeholder="Write your post here"
-              rows="10"
-              required
-              value={post.content}
-              onChange={e => handleChange(e, 'content')}
-            />
-            <TextField
-              id="mail"
-              label="E-mail"
-              overflow="auto"
-              type="email"
-              required
-              value={post.mail}
-              onChange={e => handleChange(e, 'mail')}
-            />
-            <TextField
-              id="phone"
-              label="Phone number"
-              type="number"
-              overflow="auto"
-              value={post.phone}
-              onChange={e => handleChange(e, 'phone')}
-            />
-            <Button type="submit" color="secondary" variant="contained" className={styles.button}>Save</Button>
-            <Button color="secondary" href="/" variant="contained" className={styles.button}>Return</Button>
+      <Link className={styles.switchState} to='#' onClick={handleChange2}>
+        {login ? 'if Login:' : 'if not Login:'}
+      </Link>
+
+      {login && (
+        <div>
+          <h2>Post Add</h2>
+          <form className={styles.changesForm} action="/contact/send-message" method="POST" enctype="multipart/form-data" onSubmit={submitForm}>
+            <label className={styles.formInput}>
+              Title: <input type="text" name="title" value={post.title} onChange={handleChange}></input>
+            </label>
+            <label className={styles.formInput}>
+              Description: <textarea type="text" name="content" value={post.content} onChange={handleChange}></textarea>
+            </label>
+            <label className={styles.formInput}>
+              Email: <input type="text" name="email" value={post.email} onChange={handleChange}></input>
+            </label>
+            <label className={styles.formInput}>
+              Image: <input type="file" name="image" accept=".png, .gif, .jpg" onChange={handleChange}></input>
+            </label>
+            <button type="submit">Submit</button>
           </form>
-        </Card>
-      </Container>
+        </div>
+      )}
+      {!login && (
+        <NotFound />
+      )}
     </div>
-  );
+  )
 };
+
 Component.propTypes = {
+  children: PropTypes.node,
   className: PropTypes.string,
-  addPost: PropTypes.func,
 };
+
 const mapStateToProps = state => ({
-  posts: getAll(state),
+  postsAll: getAll(state),
 });
+
 const mapDispatchToProps = dispatch => ({
   addPost: post => dispatch(addPost(post)),
 });
-const PostAddContainer = connect(mapStateToProps, mapDispatchToProps)(Component);
+
+const Container = connect(mapStateToProps, mapDispatchToProps)(Component);
+
 export {
   // Component as PostAdd,
-  PostAddContainer as PostAdd,
+  Container as PostAdd,
   Component as PostAddComponent,
 };

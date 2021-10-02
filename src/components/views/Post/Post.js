@@ -1,102 +1,85 @@
-import React from 'react';
+import React,  { useState } from 'react';
 import PropTypes from 'prop-types';
-
-import Container from '@material-ui/core/Container';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
-import CardActions from '@material-ui/core/CardActions';
-import Button from '@material-ui/core/Button';
-import CardContent from '@material-ui/core/CardContent';
-import TextField from '@material-ui/core/TextField';
+import {Link} from 'react-router-dom';
 
 import clsx from 'clsx';
 
 import { connect } from 'react-redux';
-import { getAll } from '../../../redux/postsRedux.js';
-import { getUser } from '../../../redux/userRedux';
+import { getOne } from '../../../redux/postsRedux';
 
 import styles from './Post.module.scss';
-import { settings } from '../../../settings.js';
+import Fab from '@material-ui/core/Fab';
 
-const Component = ({ className, match, posts, user }) => (
-  <div className={clsx(className, styles.root)}>
-    <Container maxWidth="lg">
+const Component = ({className, postOne}) => {
+  const [login, setLogin] = useState(false);
+  const handleChange = (event) => {
+    setLogin(!login);
+  };
 
-      {posts.filter(el => el.id === match.params.id).map(el => (
-        <Card key={el.id} className={styles.card}>
-          <div className='row'>
-            <CardHeader title={el.title} overflow="auto" subheader={`${el.date}/${el.updateDate}`} className={styles.title} />
-
-            {el.price ? <TextField variant="outlined" label="price" overflow="auto" className={styles.price} value={el.price} /> : ''}
-
-            {el.image ?
-              <CardMedia
-                component="img"
-                alt="post image"
-                height="140"
-                image={el.image || settings.image}
-                className={styles.image}
-              />
-              : ''
-            }
-          </div>
-
-          <div className="row">
-            <CardContent className={styles.contentWrapper}>
-              <TextField variant="outlined" value={el.content} overflow="auto" className={styles.content} />
-
-              <div className={styles.status}>
-                <i>{el.status}</i>
+  return (
+    <div className={clsx(className, styles.root)}>
+      <Link className={styles.switchState} to='#' onClick={handleChange}>
+        {login ? 'if Author or Admin:' : 'if no Author or Admin:'}
+      </Link>
+        <div className={styles.postCard}>
+          {postOne.map(post => (
+            <div key={post.id}>
+              <img className={styles.image} src={post.image} alt='' />
+              <div>
+                <h3 className={styles.title}>{post.title}</h3>
+                <p className={styles.info}>Added: {post.date}</p>
+                <p className={styles.about}>{post.content}</p>
+                <p className={styles.info}>Email: {post.email} </p>
+                <p className={styles.info}>Edited: {post.updateDate}</p>
+                <p className={styles.info}>Status: {post.status}</p>
+                {login && (
+                <Link className={styles.button} to={`/post/${post.id}/edit`}>
+                  <Fab
+                    size='small'
+                    color='secondary'
+                    aria-label='add'
+                    variant='extended'
+                  >
+                    Edit Post
+                  </Fab>
+                </Link>
+                )}
               </div>
-              <div className={styles.contact}>
-                <h3>Contact details</h3>
-                <p>E-mail: {el.mail}</p>
-                {el.phone ? <p>Phone number: {el.phone}</p> : ''}
-              </div>
-            </CardContent>
-          </div>
-
-          {user.logged && user.id === el.userId ?
-            <CardActions className={styles.link}>
-              <Button size="small" color="secondary" variant="contained" href={`/posts/${el.id}/edit`}>
-                Edit
-              </Button>
-            </CardActions>
-            : ''
-          }
-
-        </Card>
-      ))}
-
-    </Container>
-  </div>
-);
+            </div>
+          ))}
+        </div>
+    </div>
+  )
+};
 
 Component.propTypes = {
   className: PropTypes.string,
-  posts: PropTypes.array,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string,
-    }),
-  }),
-  user: PropTypes.object,
+  postsOne: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      title: PropTypes.string,
+      content: PropTypes.string,
+      date: PropTypes.string,
+      updateDate: PropTypes.string,
+      email: PropTypes.string,
+      status: PropTypes.string,
+      image: PropTypes.string,
+    })
+  ),
 };
 
-const mapStateToProps = state => ({
-  posts: getAll(state),
-  user: getUser(state),
+const mapStateToProps = (state, props) => ({
+  postOne: getOne(state, props.match.params.id),
 });
 
 // const mapDispatchToProps = dispatch => ({
 //   someAction: arg => dispatch(reduxActionCreator(arg)),
 // });
 
-const PostContainer = connect(mapStateToProps)(Component);
+const Container = connect(mapStateToProps)(Component);
 
 export {
-  // Component as Post,
-  PostContainer as Post,
+  //Component as Post,
+  Container as Post,
   Component as PostComponent,
 };

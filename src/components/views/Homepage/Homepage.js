@@ -1,78 +1,131 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-
-import Container from '@material-ui/core/Container';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
-import CardActions from '@material-ui/core/CardActions';
-import Button from '@material-ui/core/Button';
+import { Link } from 'react-router-dom';
 
 import clsx from 'clsx';
 
 import { connect } from 'react-redux';
-import { getAll, loadPostsRequest } from '../../../redux/postsRedux.js';
-import { getUser } from '../../../redux/userRedux';
+import { getAll } from '../../../redux/postsRedux';
+// import { reduxSelector, reduxActionCreator } from '../../../redux/exampleRedux.js';
 
 import styles from './Homepage.module.scss';
 
-class Component extends React.Component {
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardMedia from '@material-ui/core/CardMedia';
+import CardContent from '@material-ui/core/CardContent';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import Fab from '@material-ui/core/Fab';
 
-  static propTypes = {
-    className: PropTypes.string,
-    posts: PropTypes.array,
-    loadPosts: PropTypes.func,
-    user: PropTypes.object,
-  }
 
-  // componentDidMount() {
-  //   this.props.loadPosts();
-  // }
 
-  render() {
-    const { className, posts, user } = this.props;
+const Component = ({ className, postsAll }) => {
+  const [login, setLogin] = useState();
 
-    return (
-      <div className={clsx(className, styles.root)}>
+  const handleChange = (event) => {
+    setLogin(!login);
+  };
 
-        <Container maxWidth="lg">
-          {user.logged ?
-            <Fab color="secondary" aria-label="add" href="/posts/add" className={styles.button}>
-              <AddIcon />
-            </Fab>
-            : ''
-          }
+  return (
+    <div className={clsx(className, styles.root)}>
+      <Link className={styles.switchState} to='#' onClick={handleChange}>
+        {login ? 'if Login:' : 'if Logout:'}
+      </Link>
 
-          {posts.map(el => (
-            <Card key={el.id} className={styles.card}>
-              <CardHeader title={el.title} subheader={`${el.date}/${el.updateDate}`} />
-              <CardActions className={styles.link}>
-                <Button size="small" color="secondary" variant="contained" href={`/posts/${el.id}`}>
-                  Show details
-                </Button>
-              </CardActions>
-            </Card>
-          ))}
-        </Container>
+      <div className={styles.card}>
+        {postsAll.map((post) => (
+          <Card key={post.id} className={styles.cardItem}>
+            <CardHeader
+              action={
+                <IconButton aria-label='settings'>
+                  <MoreVertIcon />
+                </IconButton>
+              }
+              title={post.title}
+              subheader={post.publicationDate}
+            />
+
+            <CardActionArea>
+              <CardMedia
+                className={styles.image}
+                component='img'
+                image={post.image}
+                title={post.title}
+              />
+              <CardContent>
+                <Typography
+                  variant='body2'
+                  color='textSecondary'
+                  component='p'
+                >
+                </Typography>
+                <div>
+                </div>
+                <Link className={styles.button} to={`/post/${post.id}`}>
+                  <Fab
+                    size='small'
+                    color='secondary'
+                    aria-label='add'
+                    variant='extended'
+                  >
+                    See more
+                  </Fab>
+                </Link>
+              </CardContent>
+            </CardActionArea>
+          </Card>
+        ))}
       </div>
-    );
-  }
-}
+      {login && (          
+        <Link className={styles.button} to={'/post/add'}>
+          <Fab
+            size='small'
+            color='primary'
+            aria-label='add'
+            variant='extended'
+          >
+            Add new post
+          </Fab>
+        </Link>
+      )}
+    </div>
+  );
+};
+
+Component.propTypes = {
+  className: PropTypes.string,
+  postsAll: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      title: PropTypes.string,
+      content: PropTypes.string,
+      publicationDate: PropTypes.string,
+      updateDate: PropTypes.string,
+      email: PropTypes.string,
+      status: PropTypes.string,
+      image: PropTypes.string,
+      price: PropTypes.string,
+      phone: PropTypes.string,
+      location: PropTypes.string,
+    })
+  ),
+};
 
 const mapStateToProps = state => ({
-  posts: getAll(state),
-  user: getUser(state),
+  postsAll: getAll(state),
 });
 
-const mapDispatchToProps = (dispatch, state) => ({
-  loadPosts: () => dispatch(loadPostsRequest(state)),
-});
+// const mapDispatchToProps = dispatch => ({
+//   someAction: arg => dispatch(reduxActionCreator(arg)),
+// });
 
-const HomepageContainer = connect(mapStateToProps, mapDispatchToProps)(Component);
+const Container = connect(mapStateToProps)(Component);
 
 export {
-  // Component as Homepage,
-  HomepageContainer as Homepage,
+  //Component as Homepage,
+  Container as Homepage,
   Component as HomepageComponent,
 };

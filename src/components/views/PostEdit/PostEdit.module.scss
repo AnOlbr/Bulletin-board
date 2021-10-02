@@ -1,47 +1,36 @@
 @import '../../../styles/settings.scss';
 
 .root {
-  margin: 20px;
+  width: 50%;
+  margin: auto;
+  text-align: center;
 
-  .card {
-    margin: 30px 0;
+  .changesForm {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+    border: #a7a7a7 solid;
+    border-radius: 5px;
+    padding: 20px 0;
+    background-color: #FAFAF1;
 
-    .form {
+    .formInput {
       display: flex;
-      flex-direction: column;
-      width: 75%;
-      margin: 15px;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      width: 70%;
+      margin: 20px 0;
 
-      > div {
-        margin: 5px;
-      }
-
-      .button {
-        margin: 5px auto;
-        width: 200px;
-      }
-
-      .image {
-        width: 150px;
-        height: 150px;
-        object-fit: cover;
+      input, textarea {
+        width: 80%;
       }
     }
   }
-}
 
-@media (max-width: 567px) {
-  .root {
-    .card {
-      .form {
-        .image {
-          margin: 5px auto;
-        }
-      }
-    }
+  button{
+    a {
+    text-decoration: none;
+    }   
   }
 }
