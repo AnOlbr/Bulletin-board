@@ -57,4 +57,5 @@ export const initialState = {
       error: false,
     },
   },
+  logged: false,
 };

@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
+import React, { useReducer, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-import clsx from 'clsx';
-
 import { connect } from 'react-redux';
 import { getAll } from '../../../redux/postsRedux';
-// import { reduxSelector, reduxActionCreator } from '../../../redux/exampleRedux.js';
+import { isLogged } from '../../../redux/postsRedux';
 
 import styles from './Homepage.module.scss';
 
@@ -21,20 +19,9 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Fab from '@material-ui/core/Fab';
 
 
-
-const Component = ({ className, postsAll }) => {
-  const [login, setLogin] = useState();
-
-  const handleChange = (event) => {
-    setLogin(!login);
-  };
-
+const Component = ({ logged, postsAll }) => {
   return (
-    <div className={clsx(className, styles.root)}>
-      <Link className={styles.switchState} to='#' onClick={handleChange}>
-        {login ? 'if Login:' : 'if Logout:'}
-      </Link>
-
+    <div className={styles.root}>
       <div className={styles.card}>
         {postsAll.map((post) => (
           <Card key={post.id} className={styles.cardItem}>
@@ -79,7 +66,7 @@ const Component = ({ className, postsAll }) => {
           </Card>
         ))}
       </div>
-      {login && (          
+      { logged && (    
         <Link className={styles.button} to={'/post/add'}>
           <Fab
             size='small'
@@ -112,15 +99,13 @@ Component.propTypes = {
       location: PropTypes.string,
     })
   ),
+  logged: PropTypes.bool,
 };
 
 const mapStateToProps = state => ({
   postsAll: getAll(state),
+  logged: isLogged(state),
 });
-
-// const mapDispatchToProps = dispatch => ({
-//   someAction: arg => dispatch(reduxActionCreator(arg)),
-// });
 
 const Container = connect(mapStateToProps)(Component);
 

@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 
 import clsx from 'clsx';
 
-// import { connect } from 'react-redux';
-// mport { isLogged, logIn, logOut } from '../../../redux/postsRedux';
+import { connect } from 'react-redux';
+import { isLogged, isLogin, isLogout } from '../../../redux/postsRedux';
 
 import styles from './Header.module.scss';
 
@@ -33,11 +33,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Component = ({ className, children }) => {
+const Component = ({ className, children, logged, isLogin, isLogout }) => {
   const classes = useStyles();
-  const [login, setLogin] = useState(false);
+  const [login, setLogin] = useState(logged);
   const handleChange = (event) => {
+    event.preventDefault();
     setLogin(event.target.checked);
+    if(!logged){
+      isLogin(logged)
+    } else{
+      isLogout(logged)
+    }
   };
 
   return (
@@ -51,7 +57,7 @@ const Component = ({ className, children }) => {
               aria-label='login switch'
             />
           }
-          label={login ? 'if Login' : 'if Logout'}
+          label={login ? 'you are login' : 'you are logout'}
         />
       </FormGroup>
       <AppBar position='static'>
@@ -69,7 +75,7 @@ const Component = ({ className, children }) => {
             Bulletin
           </Typography>
 
-          {!login && (
+          {!logged && (
             <div>
               <IconButton
                 aria-label='account of current user'
@@ -83,7 +89,7 @@ const Component = ({ className, children }) => {
               </IconButton>
             </div>
           )}
-          {login && (
+          {logged && (
             <div>
               <IconButton
                 aria-label='account of current user'
@@ -114,33 +120,24 @@ const Component = ({ className, children }) => {
   );
 };
 
-/*
-const Component = ({className, children}) => (
-  <div className={clsx(className, styles.root)}>
-    <h2>Header</h2>
-    <a href='https://google.com'>Login</a>
-
-    {children}
-  </div>
-);
-*/
 Component.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
+  logged: PropTypes.bool,
 };
 
-// const mapStateToProps = state => ({
-//   someProp: reduxSelector(state),
-// });
+const mapStateToProps = state => ({
+  logged: isLogged(state),
+});
 
-// const mapDispatchToProps = dispatch => ({
-//   someAction: arg => dispatch(reduxActionCreator(arg)),
-// });
+const mapDispatchToProps = dispatch => ({
+  isLogin: logged => dispatch(isLogin(logged)),
+  isLogout: logged => dispatch(isLogout(logged)),
+});
 
-// const Container = connect(mapStateToProps, mapDispatchToProps)(Component);
+const Container = connect(mapStateToProps, mapDispatchToProps)(Component);
 
 export {
   Component as Header,
-  // Container as Header,
   Component as HeaderComponent,
 };

@@ -5,22 +5,15 @@ import {Link} from 'react-router-dom';
 import clsx from 'clsx';
 
 import { connect } from 'react-redux';
-import { getOne } from '../../../redux/postsRedux';
+import { getOne, isLogged } from '../../../redux/postsRedux';
+
 
 import styles from './Post.module.scss';
 import Fab from '@material-ui/core/Fab';
 
-const Component = ({className, postOne}) => {
-  const [login, setLogin] = useState(false);
-  const handleChange = (event) => {
-    setLogin(!login);
-  };
-
+const Component = ({className, postOne, logged}) => {
   return (
     <div className={clsx(className, styles.root)}>
-      <Link className={styles.switchState} to='#' onClick={handleChange}>
-        {login ? 'if Author or Admin:' : 'if no Author or Admin:'}
-      </Link>
         <div className={styles.postCard}>
           {postOne.map(post => (
             <div key={post.id}>
@@ -32,7 +25,7 @@ const Component = ({className, postOne}) => {
                 <p className={styles.info}>Email: {post.email} </p>
                 <p className={styles.info}>Edited: {post.updateDate}</p>
                 <p className={styles.info}>Status: {post.status}</p>
-                {login && (
+                {logged && (
                 <Link className={styles.button} to={`/post/${post.id}/edit`}>
                   <Fab
                     size='small'
@@ -66,10 +59,12 @@ Component.propTypes = {
       image: PropTypes.string,
     })
   ),
+  logged: PropTypes.bool,
 };
 
 const mapStateToProps = (state, props) => ({
   postOne: getOne(state, props.match.params.id),
+  logged: isLogged(state),
 });
 
 // const mapDispatchToProps = dispatch => ({

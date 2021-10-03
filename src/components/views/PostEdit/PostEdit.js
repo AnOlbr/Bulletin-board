@@ -1,26 +1,19 @@
 import React,  { useState } from 'react';
 import PropTypes from 'prop-types';
-import {Link} from 'react-router-dom';
 import { NotFound } from '../NotFound/NotFound';
 
 import clsx from 'clsx';
 
 import { connect } from 'react-redux';
-import { getOne, editPost } from '../../../redux/postsRedux';
+import { getOne, editPost, isLogged } from '../../../redux/postsRedux';
 
 import styles from './PostEdit.module.scss';
 
-const Component = ({className, postOne, editPost}) => {
-  const [login, setLogin] = useState(false);
+const Component = ({className, postOne, editPost, logged}) => {
   const [post, setPost] = useState(...postOne);
-
   const handleChange = (event) => {
     setPost({ ...post, [event.target.name]: event.target.value })
   }
-  const handleChange2 = (event) => {
-    setLogin(!login)
-  }
-
   const submitForm = (event) => {
     event.preventDefault();
     if(post.title.length > 1 && post.content.length > 1 && post.email){
@@ -44,11 +37,7 @@ const Component = ({className, postOne, editPost}) => {
 
   return (
     <div className={clsx(className, styles.root)}>
-      <Link className={styles.switchState} to='#' onClick={handleChange2}>
-        {login ? 'if Author or Admin:' : 'if no Author or Admin:'}
-      </Link>
-
-      {login && (
+      {logged && (
         <div>
           <h2>Post Edit</h2>
           <form className={styles.changesForm} action="/contact/send-message" method="POST" enctype="multipart/form-data" onSubmit={submitForm}>
@@ -68,7 +57,7 @@ const Component = ({className, postOne, editPost}) => {
           </form>
       </div>
       )}
-      {!login && (
+      {!logged && (
         <NotFound />
       )}
     </div>
@@ -89,10 +78,12 @@ Component.propTypes = {
       image: PropTypes.string,
     })
   ),
+  logged: PropTypes.bool,
 };
 
 const mapStateToProps = (state, props) => ({
   postOne: getOne(state, props.match.params.id),
+  logged: isLogged(state),
 });
 
 const mapDispatchToProps = dispatch => ({
