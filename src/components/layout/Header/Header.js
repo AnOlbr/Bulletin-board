@@ -39,10 +39,10 @@ const Component = ({ className, children, logged, isLogin, isLogout }) => {
   const handleChange = (event) => {
     event.preventDefault();
     setLogin(event.target.checked);
-    if(!logged){
-      isLogin(logged)
-    } else{
+    if(logged===true){
       isLogout(logged)
+    } else{
+      isLogin(logged)
     }
   };
 
@@ -75,7 +75,7 @@ const Component = ({ className, children, logged, isLogin, isLogout }) => {
             Bulletin
           </Typography>
 
-          {!logged && (
+          {logged=false && (
             <div>
               <IconButton
                 aria-label='account of current user'
@@ -138,6 +138,6 @@ const mapDispatchToProps = dispatch => ({
 const Container = connect(mapStateToProps, mapDispatchToProps)(Component);
 
 export {
-  Component as Header,
+  Container as Header,
   Component as HeaderComponent,
 };

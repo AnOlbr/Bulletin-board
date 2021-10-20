@@ -15,7 +15,7 @@ const FETCH_SUCCESS = createActionName('FETCH_SUCCESS');
 const FETCH_ERROR = createActionName('FETCH_ERROR');
 const ADD_POST = createActionName('ADD_POST');
 const EDIT_POST = createActionName('EDIT_POST');
-const IS_LOGIN = createActionName('IS_LOGGIN');
+const IS_LOGIN = createActionName('IS_LOGIN');
 const IS_LOGOUT = createActionName('IS_LOGOUT');
 
 /* action creators */

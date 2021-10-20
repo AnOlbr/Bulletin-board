@@ -57,7 +57,7 @@ const Component = ({className, postOne, editPost, logged}) => {
           </form>
       </div>
       )}
-      {!logged && (
+      {logged=false && (
         <NotFound />
       )}
     </div>
