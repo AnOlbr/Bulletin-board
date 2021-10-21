@@ -5,11 +5,11 @@ import { NotFound } from '../NotFound/NotFound';
 import clsx from 'clsx';
 
 import { connect } from 'react-redux';
-import { getOne, editPost, isLogged } from '../../../redux/postsRedux';
+import { getOne, editPost, getUser } from '../../../redux/postsRedux';
 
 import styles from './PostEdit.module.scss';
 
-const Component = ({className, postOne, editPost, logged}) => {
+const Component = ({className, postOne, editPost, user}) => {
   const [post, setPost] = useState(...postOne);
   const handleChange = (event) => {
     setPost({ ...post, [event.target.name]: event.target.value })
@@ -37,7 +37,7 @@ const Component = ({className, postOne, editPost, logged}) => {
 
   return (
     <div className={clsx(className, styles.root)}>
-      {logged && (
+      {user.logged && (
         <div>
           <h2>Post Edit</h2>
           <form className={styles.changesForm} action="/contact/send-message" method="POST" enctype="multipart/form-data" onSubmit={submitForm}>
@@ -57,7 +57,7 @@ const Component = ({className, postOne, editPost, logged}) => {
           </form>
       </div>
       )}
-      {logged=false && (
+      {user.logged=false && (
         <NotFound />
       )}
     </div>
@@ -78,12 +78,12 @@ Component.propTypes = {
       image: PropTypes.string,
     })
   ),
-  logged: PropTypes.bool,
+  user: PropTypes.object,
 };
 
 const mapStateToProps = (state, props) => ({
   postOne: getOne(state, props.match.params.id),
-  logged: isLogged(state),
+  user: getUser(state),
 });
 
 const mapDispatchToProps = dispatch => ({

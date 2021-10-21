@@ -4,7 +4,7 @@ import { initialState } from "./initialState";
 export const getAll = ({posts}) => posts.data;
 // eslint-disable-next-line
 export const getOne = ({posts}, id) => posts.data.filter(post => post.id == id);
-export const isLogged = ({logged}) => logged;
+export const getUser = ({user}) => user;
 /* action name creator */
 const reducerName = 'posts';
 const createActionName = name => `app/${reducerName}/${name}`;
@@ -77,17 +77,27 @@ export const reducer = (statePart = initialState, action = {}) => {
     }
    
     case IS_LOGIN: {
+      console.log('is logged in');
       return {
         ...statePart,
-        logged: true,
-      }
+        user: {
+          logged: true,
+          id: '1',
+          email: 'test@test.pl',
+        },
+      };
     }
 
     case IS_LOGOUT: {
+      console.log('is logged out');
       return {
         ...statePart,
-        logged: false,
-      }
+        user: {
+          logged: false,
+          id: '1',
+          email: 'test@test.pl',
+        },
+      };
     }
  
     default:

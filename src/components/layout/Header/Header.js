@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
@@ -5,7 +6,7 @@ import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 
 import { connect } from 'react-redux';
-import { isLogged, isLogin, isLogout } from '../../../redux/postsRedux';
+import { getUser, isLogin, isLogout } from '../../../redux/postsRedux';
 
 import styles from './Header.module.scss';
 
@@ -33,16 +34,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Component = ({ className, children, logged, isLogin, isLogout }) => {
+const Component = ({ className, children, user, isLogin, isLogout }) => {
   const classes = useStyles();
-  const [login, setLogin] = useState(logged);
+  const [login, setLogin] = useState(user);
   const handleChange = (event) => {
     event.preventDefault();
     setLogin(event.target.checked);
-    if(logged===true){
-      isLogout(logged)
+    if(user.logged===true){
+      isLogout(user)
     } else{
-      isLogin(logged)
+      isLogin(user)
     }
   };
 
@@ -75,7 +76,7 @@ const Component = ({ className, children, logged, isLogin, isLogout }) => {
             Bulletin
           </Typography>
 
-          {logged=false && (
+          {user.logged=false && (
             <div>
               <IconButton
                 aria-label='account of current user'
@@ -89,7 +90,7 @@ const Component = ({ className, children, logged, isLogin, isLogout }) => {
               </IconButton>
             </div>
           )}
-          {logged && (
+          {user.logged && (
             <div>
               <IconButton
                 aria-label='account of current user'
@@ -123,16 +124,16 @@ const Component = ({ className, children, logged, isLogin, isLogout }) => {
 Component.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
-  logged: PropTypes.bool,
+  user: PropTypes.object,
 };
 
 const mapStateToProps = state => ({
-  logged: isLogged(state),
+  user: getUser(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-  isLogin: logged => dispatch(isLogin(logged)),
-  isLogout: logged => dispatch(isLogout(logged)),
+  isLogin: user => dispatch(isLogin(user)),
+  isLogout: user => dispatch(isLogout(user)),
 });
 
 const Container = connect(mapStateToProps, mapDispatchToProps)(Component);

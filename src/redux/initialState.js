@@ -57,5 +57,9 @@ export const initialState = {
       error: false,
     },
   },
-  logged: false,
+  user: {
+    logged: false,
+    id: '1',
+    email: 'test@test.pl',
+  },
 };

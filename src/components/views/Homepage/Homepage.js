@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 import { connect } from 'react-redux';
 import { getAll } from '../../../redux/postsRedux';
-import { isLogged } from '../../../redux/postsRedux';
+import { getUser } from '../../../redux/postsRedux';
 
 import styles from './Homepage.module.scss';
 
@@ -19,7 +19,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Fab from '@material-ui/core/Fab';
 
 
-const Component = ({ logged, postsAll }) => {
+const Component = ({ user, postsAll }) => {
   return (
     <div className={styles.root}>
       <div className={styles.card}>
@@ -66,7 +66,7 @@ const Component = ({ logged, postsAll }) => {
           </Card>
         ))}
       </div>
-      { logged && (    
+      { user.logged && (    
         <Link className={styles.button} to={'/post/add'}>
           <Fab
             size='small'
@@ -99,12 +99,12 @@ Component.propTypes = {
       location: PropTypes.string,
     })
   ),
-  logged: PropTypes.bool,
+  user: PropTypes.object,
 };
 
 const mapStateToProps = state => ({
   postsAll: getAll(state),
-  logged: isLogged(state),
+  user: getUser(state),
 });
 
 const Container = connect(mapStateToProps)(Component);

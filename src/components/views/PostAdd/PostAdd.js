@@ -5,11 +5,11 @@ import { NotFound } from '../NotFound/NotFound';
 import clsx from 'clsx';
 
 import { connect } from 'react-redux';
-import { getAll, addPost, isLogged } from '../../../redux/postsRedux';
+import { getAll, addPost, getUser } from '../../../redux/postsRedux';
 
 import styles from './PostAdd.module.scss';
 
-const Component = ({className, addPost, logged}) => {
+const Component = ({className, addPost, user}) => {
   const [post, setPost] = useState('');
 
   const handleChange = (event) => {
@@ -38,7 +38,7 @@ const Component = ({className, addPost, logged}) => {
 
   return (
     <div className={clsx(className, styles.root)}>
-      {logged && (
+      {user.logged && (
         <div>
           <h2>Post Add</h2>
           <form className={styles.changesForm} action="/contact/send-message" method="POST" enctype="multipart/form-data" onSubmit={submitForm}>
@@ -58,7 +58,7 @@ const Component = ({className, addPost, logged}) => {
           </form>
         </div>
       )}
-      {logged=false && (
+      {user.logged=false && (
         <NotFound />
       )}
     </div>
@@ -68,12 +68,12 @@ const Component = ({className, addPost, logged}) => {
 Component.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
-  logged: PropTypes.bool,
+  user: PropTypes.object,
 };
 
 const mapStateToProps = state => ({
   postsAll: getAll(state),
-  logged: isLogged(state),
+  user: getUser(state),
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 import React,  { useState } from 'react';
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
@@ -5,13 +6,13 @@ import {Link} from 'react-router-dom';
 import clsx from 'clsx';
 
 import { connect } from 'react-redux';
-import { getOne, isLogged } from '../../../redux/postsRedux';
+import { getOne, getUser } from '../../../redux/postsRedux';
 
 
 import styles from './Post.module.scss';
 import Fab from '@material-ui/core/Fab';
 
-const Component = ({className, postOne, logged}) => {
+const Component = ({className, postOne, user}) => {
   return (
     <div className={clsx(className, styles.root)}>
         <div className={styles.postCard}>
@@ -25,7 +26,7 @@ const Component = ({className, postOne, logged}) => {
                 <p className={styles.info}>Email: {post.email} </p>
                 <p className={styles.info}>Edited: {post.updateDate}</p>
                 <p className={styles.info}>Status: {post.status}</p>
-                {logged && (
+                {user.logged && (
                 <Link className={styles.button} to={`/post/${post.id}/edit`}>
                   <Fab
                     size='small'
@@ -59,12 +60,12 @@ Component.propTypes = {
       image: PropTypes.string,
     })
   ),
-  logged: PropTypes.bool,
+  user: PropTypes.object,
 };
 
 const mapStateToProps = (state, props) => ({
   postOne: getOne(state, props.match.params.id),
-  logged: isLogged(state),
+  user: getUser(state),
 });
 
 // const mapDispatchToProps = dispatch => ({
