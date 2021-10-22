@@ -5,7 +5,8 @@ import { NotFound } from '../NotFound/NotFound';
 import clsx from 'clsx';
 
 import { connect } from 'react-redux';
-import { getOne, editPost, getUser } from '../../../redux/postsRedux';
+import { getOne, editPost } from '../../../redux/postsRedux';
+import { getUser } from '../../../redux/userRedux';
 
 import styles from './PostEdit.module.scss';
 
@@ -57,7 +58,7 @@ const Component = ({className, postOne, editPost, user}) => {
           </form>
       </div>
       )}
-      {user.logged=false && (
+      {!user.logged && (
         <NotFound />
       )}
     </div>

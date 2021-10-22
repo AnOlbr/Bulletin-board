@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 
 import { connect } from 'react-redux';
-import { getUser, isLogin, isLogout } from '../../../redux/postsRedux';
+import { getUser, login, logout } from '../../../redux/userRedux';
 
 import styles from './Header.module.scss';
 
@@ -34,16 +34,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Component = ({ className, children, user, isLogin, isLogout }) => {
+const Component = ({ className, children, user, login, logout }) => {
   const classes = useStyles();
-  const [login, setLogin] = useState(user);
   const handleChange = (event) => {
     event.preventDefault();
-    setLogin(event.target.checked);
     if(user.logged===true){
-      isLogout(user)
+      logout(user)
     } else{
-      isLogin(user)
+      login(user)
     }
   };
 
@@ -53,12 +51,12 @@ const Component = ({ className, children, user, isLogin, isLogout }) => {
         <FormControlLabel
           control={
             <Switch
-              checked={login}
+              checked={user.logged}
               onChange={handleChange}
               aria-label='login switch'
             />
           }
-          label={login ? 'you are login' : 'you are logout'}
+          label={user.logged ? 'you are login' : 'you are logout'}
         />
       </FormGroup>
       <AppBar position='static'>
@@ -76,7 +74,7 @@ const Component = ({ className, children, user, isLogin, isLogout }) => {
             Bulletin
           </Typography>
 
-          {user.logged=false && (
+          {!user.logged && (
             <div>
               <IconButton
                 aria-label='account of current user'
@@ -132,8 +130,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  isLogin: user => dispatch(isLogin(user)),
-  isLogout: user => dispatch(isLogout(user)),
+  login: user => dispatch(login(user)),
+  logout: user => dispatch(logout(user)),
 });
 
 const Container = connect(mapStateToProps, mapDispatchToProps)(Component);

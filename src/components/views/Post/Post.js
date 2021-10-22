@@ -6,7 +6,8 @@ import {Link} from 'react-router-dom';
 import clsx from 'clsx';
 
 import { connect } from 'react-redux';
-import { getOne, getUser } from '../../../redux/postsRedux';
+import { getOne } from '../../../redux/postsRedux';
+import { getUser } from '../../../redux/userRedux';
 
 
 import styles from './Post.module.scss';

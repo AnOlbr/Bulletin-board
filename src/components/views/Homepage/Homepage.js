@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 import { connect } from 'react-redux';
 import { getAll } from '../../../redux/postsRedux';
-import { getUser } from '../../../redux/postsRedux';
+import { getUser } from '../../../redux/userRedux';
 
 import styles from './Homepage.module.scss';
 
