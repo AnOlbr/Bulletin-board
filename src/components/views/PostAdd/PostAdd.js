@@ -5,12 +5,12 @@ import { NotFound } from '../NotFound/NotFound';
 import clsx from 'clsx';
 
 import { connect } from 'react-redux';
-import { getAll, addPost, fetchAddPost} from '../../../redux/postsRedux';
+import { getAll, fetchAddPost} from '../../../redux/postsRedux';
 import { getUser } from '../../../redux/userRedux';
 
 import styles from './PostAdd.module.scss';
 
-const Component = ({className, addPost, user}) => {
+const Component = ({className, fetchAddPostDispatched, user}) => {
   const [post, setPost] = useState('');
 
   const handleChange = (event) => {
@@ -19,8 +19,8 @@ const Component = ({className, addPost, user}) => {
   const submitForm = (event) => {
     event.preventDefault();
     if(post.title.length > 1 && post.text.length > 1 && post.email){
-      addPost(post);
-      fetchAddPost(post);
+      //addPostDispatched(post);
+      fetchAddPostDispatched(post);
       console.log('add', post);
 
       setPost({
@@ -98,8 +98,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  addPost: post => dispatch(addPost(post)),
-  fetchAddPost: post => dispatch(fetchAddPost(post)),
+  //addPostDispatched: post => dispatch(addPost(post)),
+  fetchAddPostDispatched: post => dispatch(fetchAddPost(post)),
 });
 
 const Container = connect(mapStateToProps, mapDispatchToProps)(Component);

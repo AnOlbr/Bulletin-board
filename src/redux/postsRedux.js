@@ -4,9 +4,9 @@ import Axios from 'axios';
 /* selectors */
 export const getAll = ({posts}) => posts.data;
 // eslint-disable-next-line
-export const getOne = ({posts}, id) => posts.data.filter(post => post.id == id);
+export const getOne = ({posts}, id) => posts.data.filter(post => post._id == id);
 export const getOnePost = ({posts}) => posts.onePost;
-//export const getOne = ({posts}, id) => posts.data.filter(post => post.id == id);
+//export const getOne = ({posts}, id) => posts.data.filter(post => post._id == id);
 /* action name creator */
 const reducerName = 'posts';
 const createActionName = name => `app/${reducerName}/${name}`;
@@ -19,7 +19,6 @@ const ADD_POST = createActionName('ADD_POST');
 const EDIT_POST = createActionName('EDIT_POST');
 const FETCH_ONE_POST = createActionName('FETCH_ONE_POST');
 
-
 /* action creators */
 export const fetchStarted = payload => ({ payload, type: FETCH_START });
 export const fetchSuccess = payload => ({ payload, type: FETCH_SUCCESS });
@@ -29,9 +28,8 @@ export const editPost = payload => ({ payload, type: EDIT_POST });
 export const fetchOnePost = payload => ({ payload, type: FETCH_ONE_POST });
 
 /* thunk creators */
-
 export const fetchPublished = () => {
-  return (dispatch, getState,) => {
+  return (dispatch, getState) => {
     const state = getState();
     if(!state.posts.data.length && state.posts.loading.active === false){
       dispatch(fetchStarted());
@@ -49,7 +47,7 @@ export const fetchPublished = () => {
 };
 
 export const fetchPostById = (id) => {
-  return (dispatch, getState,) => {
+  return (dispatch, getState) => {
     dispatch(fetchStarted());
     console.log('getState', getState());
 
@@ -65,15 +63,16 @@ export const fetchPostById = (id) => {
 };
 
 export const fetchAddPost = (data) => {
-  const x = {...data, author: data.email};
+  const postToSend = {...data, author: data.email, created: new Date()};
 
-  return (dispatch, getState,) => {
+  return (dispatch, getState) => {
     dispatch(fetchStarted());
 
     Axios
-      .post(`http://localhost:8000/api/posts/add`, x)
+      .post(`http://localhost:8000/api/posts/add`, postToSend)
       .then(res => {
-        dispatch(addPost(x));
+        dispatch(addPost(res.data.data));
+        window.location.href = '/'; //wylogowuje!
       })
       .catch(err => {
         dispatch(fetchError(err.message || true));
@@ -132,7 +131,7 @@ export const reducer = (statePart = initialState, action = {}) => {
     case EDIT_POST: {
       return {
         ...statePart,
-        data: statePart.data.map(post => post.id === action.payload.id ? action.payload : post),
+        data: statePart.data.map(post => post._id === action.payload.id ? action.payload : post),
       }
     }
     default:

@@ -27,7 +27,7 @@ const Component = ({ postsAll, fetchPublishedPosts, user }) => {
     <div className={styles.root}>
       <div className={styles.card}>
         {postsAll.map((post) => (
-          <Card key={post.id} className={styles.cardItem}>
+          <Card key={post._id} className={styles.cardItem}>
             <CardHeader
               avatar={
                 <Avatar aria-label='recipe' className={styles.avatar}>
@@ -36,34 +36,34 @@ const Component = ({ postsAll, fetchPublishedPosts, user }) => {
               }
               title={post.title}
             />
-
-            <CardActionArea
-              href={`/post/${post._id}`}>
-              <CardMedia
-                className={styles.image}
-                component='img'
-                image={post.photo}
-              />
-              <CardContent>
-                <Typography
-                  variant='body2'
-                  color='textSecondary'
-                  component='p'
-                >
-                </Typography>
-                <div>
-                <Typography className={styles.author} component='p' variant='subtitle2'>
-                    Author: {post.author}
+            <Link to={`/post/${post._id}`}>
+              <CardActionArea>
+                <CardMedia
+                  className={styles.image}
+                  component='img'
+                  image={post.photo}
+                />
+                <CardContent>
+                  <Typography
+                    variant='body2'
+                    color='textSecondary'
+                    component='p'
+                  >
                   </Typography>
-                  <Typography className={styles.created} component='p' variant='subtitle2'>
-                    Created: {post.created}
-                  </Typography>
-                  <Typography className={styles.click} component='p' variant='subtitle2'>
-                    Click on card to see more!
-                  </Typography>
-                </div>
-              </CardContent>
-            </CardActionArea>
+                  <div>
+                  <Typography className={styles.author} component='p' variant='subtitle2'>
+                      Author: {post.author}
+                    </Typography>
+                    <Typography className={styles.created} component='p' variant='subtitle2'>
+                      Created: {post.created}
+                    </Typography>
+                    <Typography className={styles.click} component='p' variant='subtitle2'>
+                      Click on card to see more!
+                    </Typography>
+                  </div>
+                </CardContent>
+              </CardActionArea>
+            </Link>
           </Card>
         ))}
       </div>

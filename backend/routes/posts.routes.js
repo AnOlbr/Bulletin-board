@@ -56,12 +56,11 @@ router.post('/posts/add', async (req, res) => {
       location: location,
     });
 
-    await newPost.save();
-    res.json({ message: 'OK' });;
+    const createdPost = await newPost.save();
+    res.json({ message: 'OK', data: createdPost });;
   } catch (err) {
     res.status(500).json(`This error ${err}`);
   }
 });
-
 
 module.exports = router;
